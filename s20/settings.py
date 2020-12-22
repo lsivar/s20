@@ -117,6 +117,6 @@ STATIC_URL = '/static/'
 
 # import 自定义配置
 try:
-    from .local_setting import *
+    from .local_setting_dev import *
 except ImportError:
     pass

@@ -7,7 +7,7 @@ __pycache__/
 *$py.class
 
 # Django stuff
-local_setting_dev.py
+*local_setting_dev.py
 *.sqlite3
 
 # database migrations

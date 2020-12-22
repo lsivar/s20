@@ -13,3 +13,5 @@ TIME_ZONE = 'Asia/Shanghai'
 TENCENT_SMS_APP_ID = 66
 TENCENT_SMS_APP_KEY = 77
 TENCENT_SMS_SIGN = 'SG智能管理平台'
+
+sb=1

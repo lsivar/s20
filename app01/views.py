@@ -31,7 +31,7 @@ class RegisterModelForm(forms.ModelForm):
             field.widget.attrs['placeholder'] = '请输入%s' % field.label
 
 
-def send_code(request):
+def send_sms(request):
     """发送验证码"""
     mobile_phone = request.GET.get("mobile_phone")
     conn = get_redis_connection('default')

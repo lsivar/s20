@@ -51,6 +51,13 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 's20.urls'
 
+
+SMS_TEMPLATES = {
+    'register': 123,
+    'login': 345,
+}
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',

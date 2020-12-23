@@ -1,12 +1,7 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""
-@author: LSW
-@time: 2020/12/22 11:22 下午
-"""
+# -*- coding:utf-8 -*-
 
 import ssl
-
 ssl._create_default_https_context = ssl._create_unverified_context
 
 from qcloudsms_py import SmsMultiSender, SmsSingleSender

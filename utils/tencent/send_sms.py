@@ -12,6 +12,7 @@ from tencentcloud.sms.v20190711 import sms_client, models
 # 导入可选配置类
 from tencentcloud.common.profile.client_profile import ClientProfile
 from tencentcloud.common.profile.http_profile import HttpProfile
+from django.core.validators import ValidationError
 
 '''
 {
@@ -30,13 +31,6 @@ from tencentcloud.common.profile.http_profile import HttpProfile
 }
 '''
 from django.conf import settings
-
-
-def get_template_id(type):
-    template_id = settings.SMS_TEMPLATES_IDS[type]
-    if not template_id:
-        return template_id
-    return 0
 
 
 def send_sms_single(phone_num, template_id, template_param_list):
@@ -76,7 +70,7 @@ def send_sms_single(phone_num, template_id, template_param_list):
         req.SenderId = ""
         # 下发手机号码，采用 e.164 标准，+[国家或地区码][手机号]
         # 例如+8613711112222， 其中前面有一个+号 ，86为国家码，13711112222为手机号，最多不要超过200个手机号
-        phone_num = "+86".format(phone_num)
+        phone_num = "+86{}".format(phone_num)
         req.PhoneNumberSet = [phone_num]
         # 模板 ID: 必须填写已审核通过的模板 ID，可登录 [短信控制台] 查看模板 ID
         req.TemplateID = template_id
@@ -90,4 +84,5 @@ def send_sms_single(phone_num, template_id, template_param_list):
         print(resp.to_json_string(indent=2))
 
     except TencentCloudSDKException as err:
-        raise Exception("短信发送失败!")
+        print(err)
+        raise ValidationError("短信发送失败!")

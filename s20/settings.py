@@ -53,9 +53,9 @@ ROOT_URLCONF = 's20.urls'
 
 
 SMS_TEMPLATES_IDS = {
-    'register': 820333,
-    'login': 821276,
-    'update': 821277,
+    'register': '820333',
+    'login': '821276',
+    'update': '821277',
 }
 
 

@@ -8,7 +8,7 @@
 from django.http import JsonResponse
 from django.shortcuts import render
 import time
-from web.forms.account import RegisterModelForm, SendSmsForm
+from web.forms.account import RegisterModelForm, SendSmsForm, LoginSMSForm
 
 
 def send_sms(request):
@@ -33,5 +33,19 @@ def register(request):
         # form.save自动剔除掉多余自动
         instance = form.save()
         return JsonResponse({"status": True, "data": "/login"})
+
+    return JsonResponse({"status": False, "error": form.errors})
+
+
+def login_sms(request):
+    if request.method == "GET":
+        form = LoginSMSForm()
+        return render(request, "login_sms.html", {"form": form})
+
+    # 登录校验
+    form = LoginSMSForm(data=request.POST)
+    if form.is_valid():
+        # 登录成功，进入主页面
+        pass
 
     return JsonResponse({"status": False, "error": form.errors})

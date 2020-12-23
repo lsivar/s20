@@ -11,7 +11,7 @@ TIME_ZONE = 'Asia/Shanghai'
 # 腾讯短信配置
 
 TENCENT_SMS_APP_ID = 1253212083
-TENCENT_SMS_APP_KEY = 'AKID2uXwHO6UEk6E7lsKFvPktrdASXP18XR5'
+TENCENT_SMS_APP_KEY = 'aa'
 TENCENT_SMS_SIGN = 'SG智能管理平台'
 
 # django redis

@@ -21,4 +21,5 @@ from app01 import views
 urlpatterns = [
     path(r'^admin/', admin.site.urls),
     path(r'app01/register/', views.register),
+    path(r'app01/send-code/', views.send_code),
 ]

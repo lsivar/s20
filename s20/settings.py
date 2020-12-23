@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'app01.apps.App01Config',
+    'web.apps.WebConfig',
 ]
 
 MIDDLEWARE = [
@@ -79,6 +80,7 @@ DATABASES = {
     }
 }
 
+
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
 
@@ -120,3 +122,8 @@ try:
     from .local_setting_dev import *
 except ImportError:
     pass
+
+
+
+
+

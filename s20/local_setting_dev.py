@@ -14,4 +14,19 @@ TENCENT_SMS_APP_ID = 66
 TENCENT_SMS_APP_KEY = 77
 TENCENT_SMS_SIGN = 'SG智能管理平台'
 
-sb=2
+# django redis
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://119.29.147.199:12266/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "CONNECTION_POOL_KWARGS": {
+                "max_connections": 10,
+                "encoding": "utf-8"
+            },
+            "PASSWORD": "FKJasd..SDF123..",
+        }
+
+    }
+}

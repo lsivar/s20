@@ -47,17 +47,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'utils.middleware.MD1',
 ]
 
 ROOT_URLCONF = 's20.urls'
-
 
 SMS_TEMPLATES_IDS = {
     'register': '820333',
     'login': '821276',
     'update': '821277',
 }
-
 
 TEMPLATES = [
     {
@@ -87,7 +86,6 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,8 +128,3 @@ try:
     from .local_setting_dev import *
 except ImportError:
     pass
-
-
-
-
-

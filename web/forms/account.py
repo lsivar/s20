@@ -4,16 +4,16 @@
 @author: LSW
 @time: 2020/12/23 2:06 下午
 """
+import random
+import re
+
 from django import forms
 from django.core.validators import RegexValidator, ValidationError
-from web import models
-from utils.tencent import send_sms
-import random
 from django_redis import get_redis_connection
-from django.conf import settings
-from django.db.models import Q
-import re
+
 from utils.encrypt import *
+from web import models
+
 
 class BootstarpForm(object):
     def __init__(self, *args, **kwargs):
@@ -21,6 +21,7 @@ class BootstarpForm(object):
         for name, field in self.fields.items():
             field.widget.attrs['class'] = 'form-control'
             field.widget.attrs['placeholder'] = '请输入%s' % field.label
+
 
 class RegisterModelForm(BootstarpForm, forms.ModelForm):
     """表单约束
@@ -35,8 +36,8 @@ class RegisterModelForm(BootstarpForm, forms.ModelForm):
                                min_length=8,
                                max_length=64,
                                error_messages={
-                                   "min_length":"密码长度必须大于8位",
-                                   "max_length":"密码长度不能大于64位"
+                                   "min_length": "密码长度必须大于8位",
+                                   "max_length": "密码长度不能大于64位"
                                },
                                widget=forms.PasswordInput)
     confirm_password = forms.CharField(label="确认密码", widget=forms.PasswordInput)
@@ -108,15 +109,24 @@ class RegisterModelForm(BootstarpForm, forms.ModelForm):
             raise ValidationError("验证码错误!")
         return code
 
+
 class LoginSMSForm(BootstarpForm, forms.Form):
     """ 短信登录 """
-    mobile_phone = forms.CharField(label="手机号")
-    code = forms.CharField(label="验证码")
+    mobile_phone = forms.CharField(label="手机号", validators=[RegexValidator(r'^(1[3|4|5|6|7|8|9])\d{9}$', '手机号码格式错误'), ])
+    code = forms.CharField(label="验证码", widget=forms.TextInput)
 
     def clean_code(self):
+        code = self.cleaned_data['code']
+        return code
+    '''备份上面'''
+    def back(self):
         conn = get_redis_connection()
-        mobile_phone = self.cleaned_data.get("mobile_phone")
         code = self.cleaned_data.get("code")
+        mobile_phone = self.cleaned_data.get("mobile_phone")
+        if not mobile_phone:
+            # 前面校验失败，直接返回
+            return code
+
         redis_code = conn.get(mobile_phone)
         if not redis_code:
             raise ValidationError("验证码已失效，请重新发送")
@@ -125,6 +135,7 @@ class LoginSMSForm(BootstarpForm, forms.Form):
         if code.strip() != str_code:
             raise ValidationError("验证码错误!")
         return code
+
 
 class SendSmsForm(forms.Form):
     mobile_phone = forms.CharField(label="手机号", validators=[RegexValidator(r'^(1[3|4|5|6|7|8|9])\d{9}$', '手机号码格式错误'), ])

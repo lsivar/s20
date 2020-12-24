@@ -9,6 +9,7 @@ from django.http import JsonResponse
 from django.shortcuts import render
 import time
 from web.forms.account import RegisterModelForm, SendSmsForm, LoginSMSForm
+from web import models
 
 
 def send_sms(request):
@@ -18,7 +19,7 @@ def send_sms(request):
     if form.is_valid():
         return JsonResponse({"status": True})
 
-    return JsonResponse({"status": False, "error": form.errors})
+    return JsonResponse({"status": False, "error": form.errors}, json_dumps_params={'ensure_ascii': False, })
 
 
 def register(request):
@@ -34,7 +35,7 @@ def register(request):
         instance = form.save()
         return JsonResponse({"status": True, "data": "/login"})
 
-    return JsonResponse({"status": False, "error": form.errors})
+    return JsonResponse({"status": False, "error": form.errors}, json_dumps_params={'ensure_ascii': False}, )
 
 
 def login_sms(request):
@@ -45,7 +46,15 @@ def login_sms(request):
     # 登录校验
     form = LoginSMSForm(data=request.POST)
     if form.is_valid():
-        # 登录成功，进入主页面
-        pass
+        # 登录成功,查询用户信息，存储session
+        mobile_phone = form.cleaned_data['mobile_phone']
+        user_info = models.UserInfo.objects.filter(mobile_phone=mobile_phone).first()
+        # TODO 存储session 或者返回token
+        return JsonResponse({"status": True, "data": "/main"})
 
-    return JsonResponse({"status": False, "error": form.errors})
+    return JsonResponse({"status": False, "error": form.errors}, json_dumps_params={"ensure_ascii": False})
+
+
+def test_error(request):
+    a = 1 / 0
+    return JsonResponse({"status": True})

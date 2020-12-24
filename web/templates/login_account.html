@@ -1,6 +1,6 @@
 {% extends 'layout/basic.html' %}
 {% load static %}
-{% block title %}短信登录{% endblock %}
+{% block title %}账号登录{% endblock %}
 
 {% block css %}
     <link rel="stylesheet" href="{% static 'css/account.css' %}">
@@ -17,8 +17,8 @@
 {% block content %}
     <div class="container">
         <div class="account">
-            <h1>短信登录</h1>
-            <form method="post" id="smsLoginForm" novalidate>
+            <h1>账号登录</h1>
+            <form method="post" id="accountLoginForm" novalidate>
                 {% csrf_token %}
                 {% for field in form %}
                     {% if field.name == 'code' %}
@@ -30,7 +30,7 @@
                                     <span class="error_msg"></span>
                                 </div>
                                 <div class="col-md-6">
-                                    <input id="sendBtn" type="button" class="btn btn-default" value="获取验证码">
+                                    <img id="image_code" src="{% url 'image_code' %}" />
                                 </div>
                             </div>
 
@@ -62,26 +62,36 @@
 {% block js %}
     <script>
         $(function () {
-            bindClickSendSmsBts()
+            bindClickImageCodeBts()
             bindClickBtnSubmit()
         });
 
+        function bindClickImageCodeBts() {
+            $('#image_code').click(function () {
+                let url = "{% url 'image_code' %}?s="+ (new Date()).getTime()
+                $(this).attr("src",url);
+            });
+        }
+        function updateImage(){
+
+        }
         function bindClickBtnSubmit() {
             $('#btnSubmit').click(function () {
                 // 清空所有错误提示
                 $('.error_msg').empty()
                 $.ajax({
-                    url: '{% url 'login_sms' %}',
+                    url: '{% url 'login_account' %}',
                     type: 'POST',
-                    data: $('#smsLoginForm').serialize(),
+                    data: $('#accountLoginForm').serialize(),
                     dataType: 'JSON',
                     success: function (res) {
                         if (res.status) {
                             console.log(res)
                         } else {
+                            let url = "{% url 'image_code' %}?s="+ (new Date()).getTime()
+                            $('#image_code').attr("src",url);
+
                             $.each(res.error, function (key, value) {
-                                // 显示错误信息
-                                console.log(value[0])
                                 $('#id_' + key).next().text(value[0])
                             })
                         }
@@ -90,40 +100,6 @@
             });
         }
 
-        function bindClickSendSmsBts() {
-            $('#sendBtn').click(function () {
-                // 清空所有错误提示
-                $('.error_msg').empty()
-                let mobilePhone = $('#id_mobile_phone').val();
-                $.get('{% url 'send_sms' %}', {'mobile_phone': mobilePhone, 'tpl': 'login'}, function (res) {
-                    if (res.status) {
-                        sendMsmCountDown()
-                    } else {
-                        $.each(res.error, function (key, value) {
-                            // 显示错误信息
-                            console.log(value[0])
-                            $('#id_' + key).next().text(value[0])
-                        })
-                    }
-                });
-            });
-        }
 
-        function sendMsmCountDown() {
-            // 获取按钮
-            let sendBtn = $('#sendBtn')
-            let time = 60
-            let obj = setInterval(function () {
-                if (time < 1) {
-                    clearInterval(obj)
-                    sendBtn.prop('disabled', false)
-                    sendBtn.val('发送验证码')
-                } else {
-                    time = time - 1
-                    sendBtn.prop('disabled', true)
-                    sendBtn.val(time + '秒倒计时')
-                }
-            }, 1000)
-        }
     </script>
 {% endblock %}

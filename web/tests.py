@@ -6,8 +6,12 @@ from django.test import TestCase
 from django.test import TestCase
 from django_redis import get_redis_connection
 
-
+from utils.encrypt import md5
 class MyTestCase(TestCase):
+
+    def md5test(self):
+        data = 'lsw'
+        print(md5(data))
 
     def testRedis(self):
         conn = get_redis_connection()

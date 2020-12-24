@@ -118,7 +118,9 @@ class LoginSMSForm(BootstarpForm, forms.Form):
     def clean_code(self):
         code = self.cleaned_data['code']
         return code
+
     '''备份上面'''
+
     def back(self):
         conn = get_redis_connection()
         code = self.cleaned_data.get("code")
@@ -175,3 +177,29 @@ class SendSmsForm(forms.Form):
         # 发送短信
         # send_sms.send_sms_single(mobile_phone, template_id, [str(code), ])
         return mobile_phone
+
+
+class AccountLoginForm(BootstarpForm, forms.Form):
+    username = forms.CharField(label="邮箱或手机号")
+    password = forms.CharField(label="密码", widget=forms.PasswordInput)
+    code = forms.CharField(label="验证码")
+
+    def __init__(self, request, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request = request
+        self.fields['username'].initial = '290@qq.com'
+
+    def clean_password(self):
+        password = self.cleaned_data['password']
+        return md5(password)
+
+    def clean_code(self):
+        code = self.request.session.get('image_code')
+        image_code = self.cleaned_data.get('code')
+        if not code:
+            raise ValidationError('验证码已过期')
+
+        if code.upper() != image_code.upper():
+            raise ValidationError('验证码错误')
+
+        return image_code

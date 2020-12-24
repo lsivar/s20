@@ -16,11 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from web.views import account
+from web.views import account, home
 
 urlpatterns = [
     # namespace  app01:register
+    path(r'index/', home.index, name='index'),
+    path(r'logout/', account.logout, name='logout'),
     path(r'register/', account.register, name='register'),
     path(r'send/sms/', account.send_sms, name='send_sms'),
     path(r'login/sms/', account.login_sms, name='login_sms'),
+    path(r'login/account/', account.login_account, name='login_account'),
+    path(r'login/image/code/', account.image_code, name='image_code'),
 ]
